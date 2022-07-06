@@ -14,6 +14,8 @@ services:
         published: "3000"
         protocol: tcp
     restart: always
+    networks:
+      - management_network
 
   database-mysql:
     container_name: management_screens-db-mysql
@@ -23,12 +25,17 @@ services:
     ports:
       - mode: ingress
         target: 3306
-        published: "3306"
+        published: "3309"
         protocol: tcp
     restart: always
     volumes:
       - management_db:/var/lib/mysql
       - ./.docker/mysql/logs:/var/log/mysql
+    networks:
+      - management_network
 
 volumes:
   management_db:
+
+networks:
+  management_network:

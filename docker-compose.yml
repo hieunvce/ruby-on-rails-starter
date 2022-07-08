@@ -1,17 +1,25 @@
 services:
   nginx:
-    image: nginx:1.16.0-alpine
+    build:
+      context: .
+      dockerfile: ./.docker/nginx/Dockerfile
     volumes:
       - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "8080:80"
+    depends_on:
+      - backend_rails
     restart: always
     networks:
       - management_network
 
   backend_rails:
     build:
-      context: ./rails
+      context: .
+      dockerfile: ./.docker/rails/Dockerfile
+      args:
+        SECRET_KEY_BASE: $$SECRET_KEY_BASE
+        RAILS_ENV: $$RAILS_ENV
     volumes:
       - ./rails:/usr/src/app
     env_file:
